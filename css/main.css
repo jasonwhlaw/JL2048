@@ -4,31 +4,39 @@
 }
 
 body {
-  background: #00c389;
+  background: rgba(0, 0, 0, 0.85);
   font-family: "Clear Sans";
   text-align: center;
+  color: white
+
+}
+
+h1 {
+    font-size: 55px;
+    padding: 20px;
 
 }
 
 .board {
-  background: 00c389;
+  background: rgba(45, 67, 96, 1);
   margin: 0 auto;
   padding: 8px;
   width: 472px;
   height: 472px;
+  border-radius: 7px;
 }
 
 .cell {
   font: arial;
   font-style: bold;
-  font-size: 15px;
-  background: rgba(0, 195, 137, 1);
-  border: 5px solid gray;
-  border-radius: 5px;
+  font-size: 30px;
+  background: rgba(63, 79, 95, 1);
+  border: 3px solid gray;
+  border-radius: 7px;
   float: left;
-  margin: 7px;
-  width: 100px;
-  height: 100px;
+  margin: 3px;
+  width: 108px;
+  height: 108px;
 
 }
 
