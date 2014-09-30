@@ -1,11 +1,21 @@
+@font-face {
+  font-family: "Clear Sans";
+  src: url("/fonts/ClearSans-Bold.ttf");
+}
+
 body {
-  background: black
+  background: #14b4c6;
+  font-family: "Clear Sans";
 }
 
 .cell {
+  font: arial;
+  font-style: bold;
   border: 1px solid black;
   float: left;
-  width: 100px
+  width: 100px;
+  height: 100px;
 }
+
 
 
