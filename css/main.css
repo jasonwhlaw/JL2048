@@ -4,17 +4,36 @@
 }
 
 body {
-  background: #14b4c6;
+  background: #00c389;
   font-family: "Clear Sans";
+  text-align: center;
+
+}
+
+.board {
+  background: 00c389;
+  margin: 0 auto;
+  padding: 8px;
+  width: 472px;
+  height: 472px;
 }
 
 .cell {
   font: arial;
   font-style: bold;
-  border: 1px solid black;
+  font-size: 15px;
+  background: rgba(0, 195, 137, 1);
+  border: 5px solid gray;
+  border-radius: 5px;
   float: left;
+  margin: 7px;
   width: 100px;
   height: 100px;
+
+}
+
+.cell div {
+  margin-top: 28px;
 }
 
 
