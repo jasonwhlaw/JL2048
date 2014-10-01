@@ -29,7 +29,7 @@ h1 {
 .cell {
   font: arial;
   font-style: bold;
-  font-size: 30px;
+  font-size: 60px;
   background: rgba(63, 79, 95, 1);
   border: 3px solid gray;
   border-radius: 7px;
@@ -41,7 +41,7 @@ h1 {
 }
 
 .cell div {
-  margin-top: 28px;
+  margin-top: 8px;
 }
 
 
