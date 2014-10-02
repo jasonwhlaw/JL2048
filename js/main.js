@@ -44,8 +44,8 @@
     for (i = _i = 0; _i <= 3; i = ++_i) {
       if (direction === 'right') {
         row = getRow(i, board);
-        mergeCells(row, direction);
-        _results.push(collapseCells());
+        row = mergeCells(row, direction);
+        _results.push(collapseCells(row, direction));
       } else {
         _results.push(void 0);
       }
@@ -62,7 +62,7 @@
     if (direction === 'right') {
       for (a = _i = 3; _i > 0; a = --_i) {
         for (b = _j = _ref = a - 1; _ref <= 0 ? _j <= 0 : _j >= 0; b = _ref <= 0 ? ++_j : --_j) {
-          if (row[a] = 0) {
+          if (row[a] === 0) {
             break;
           } else if (row[a] === row[b]) {
             row[a] *= 2;
@@ -79,19 +79,34 @@
 
   console.log(mergeCells([4, 0, 0, 4], 'right'));
 
-  collapseCells = function() {
-    return console.log('collapse cells');
-  };
-
-  showBoard = function(board) {
-    var col, row, _i, _j;
-    for (row = _i = 0; _i <= 3; row = ++_i) {
-      for (col = _j = 0; _j <= 3; col = ++_j) {
-        $(".r" + row + ".c" + col + " > div").html(board[row][col]);
+  collapseCells = function(row, direction) {
+    row = row.filter(function(x) {
+      return x !== 0;
+    });
+    if (direction === 'right') {
+      while (row.length < 4) {
+        row.unshift(0);
       }
     }
-    console.log("show board");
-    return console.log(row + col);
+    return row;
+  };
+
+  console.log(collapseCells([2, 0, 0, 2], 'right'));
+
+  showBoard = function(board) {
+    var col, row, _i, _results;
+    _results = [];
+    for (row = _i = 0; _i <= 3; row = ++_i) {
+      _results.push((function() {
+        var _j, _results1;
+        _results1 = [];
+        for (col = _j = 0; _j <= 3; col = ++_j) {
+          _results1.push($(".r" + row + ".c" + col + " > div").html(board[row][col]));
+        }
+        return _results1;
+      })());
+    }
+    return _results;
   };
 
   printArray = function(array) {
@@ -112,10 +127,10 @@
     return $('body').keydown((function(_this) {
       return function(e) {
         var direction, key, keys;
-        e.preventDefault();
         key = e.which;
         keys = [37, 38, 39, 40];
         if (__indexOf.call(keys, key) >= 0) {
+          e.preventDefault();
           console.log("key: ", key);
           direction = (function() {
             switch (key) {
@@ -129,7 +144,6 @@
                 return 'down';
             }
           })();
-          console.log("direction: ", direction);
           return move(_this.board, direction);
         } else {
 

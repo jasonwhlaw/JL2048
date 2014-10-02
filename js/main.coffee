@@ -34,8 +34,8 @@ move = (board, direction) ->
   for i in [0..3]
     if direction is 'right'
       row = getRow(i,board)
-      mergeCells(row, direction)
-      collapseCells()
+      row = mergeCells(row, direction)
+      collapseCells(row, direction)
 
 getRow = (r, board) ->   #start cloning the board for pass by reference
   [board[r][0], board[r][1], board[r][2], board[r][3]]
@@ -44,7 +44,7 @@ mergeCells = (row, direction) ->
   if direction is 'right'
     for a in [3...0]
       for b in [a-1..0]
-        if row[a] = 0 then break
+        if row[a] is 0 then break
         else if row[a] == row[b]
           row[a] *= 2 # same as row[a] = row[a] * 2
           row[b] = 0
@@ -52,19 +52,26 @@ mergeCells = (row, direction) ->
         else if row[b] isnt 0 then break
   row
 
+#console.log  mergeCells [2, 2, 2, 0], 'right'
 console.log  mergeCells [4, 0, 0, 4], 'right'
 
-collapseCells = ->
-  console.log 'collapse cells'
-
+collapseCells = (row, direction) ->
+  # remove '0'
+  row = row.filter (x) -> x isnt 0
+  # adding '0'
+  if direction is 'right'
+    while row.length < 4
+      row.unshift 0
+  row
+console.log collapseCells [2, 0, 0, 2], 'right'
 
 showBoard = (board) ->
   for row in [0..3]
     for col in [0..3]
       $(".r#{row}.c#{col} > div").html(board[row][col])
 
-  console.log "show board"
-  console.log row + col
+  # console.log "show board"
+  # console.log row + col
 
 
 printArray = (array) ->
@@ -82,12 +89,12 @@ $ ->
   showBoard(@board)
 
   $('body').keydown (e) =>
-    e.preventDefault()
 
     key = e.which
     keys = [37..40]
 
     if key in keys
+      e.preventDefault()
       #continue the game
       console.log "key: ", key
       direction = switch key
@@ -95,7 +102,7 @@ $ ->
         when 38 then 'up'
         when 39 then 'right'
         when 40 then 'down'
-      console.log "direction: ", direction
+      # console.log "direction: ", direction
 
       #try moving
       move(@board, direction)
