@@ -29,16 +29,30 @@ generateTile = (board) ->
 
   console.log "generate tile"
 
-move = (board, direction) ->
+move = (board, direction) ->  #this function includes multiple functions as below
+  newBoard = buildBoard()
 
   for i in [0..3]
     if direction is 'right'
       row = getRow(i,board)
       row = mergeCells(row, direction)
-      collapseCells(row, direction)
+      row = collapseCells(row, direction)
+      setRow(row, i, newBoard)
+
+  for i in [0..3]
+    if direction is 'left'
+      row = getRow(i,board)
+      row = mergeCells(row, direction)
+      row = collapseCells(row, direction)
+      setRow(row, i, newBoard)
+
+  newBoard
 
 getRow = (r, board) ->   #start cloning the board for pass by reference
   [board[r][0], board[r][1], board[r][2], board[r][3]]
+
+setRow = (row, index, board) ->
+  board[index] = row
 
 mergeCells = (row, direction) ->
   if direction is 'right'
@@ -50,9 +64,17 @@ mergeCells = (row, direction) ->
           row[b] = 0
           break
         else if row[b] isnt 0 then break
+  if direction is 'left'
+    for a in [0...3]
+      for b in [0..a-1]
+        if row[a] is 0 then break
+        else if row[a] == row[b]
+          row[a] *= 2 # same as row[a] = row[a] * 2
+          row[b] = 0
+          break
+        else if row[b] isnt 0 then break
   row
 
-#console.log  mergeCells [2, 2, 2, 0], 'right'
 console.log  mergeCells [4, 0, 0, 4], 'right'
 
 collapseCells = (row, direction) ->
@@ -62,8 +84,37 @@ collapseCells = (row, direction) ->
   if direction is 'right'
     while row.length < 4
       row.unshift 0
+  if direction is 'left'
+    while row.length < 4
+      row.unshift 0
+
   row
 console.log collapseCells [2, 0, 0, 2], 'right'
+
+
+moveIsValid = (originalBoard, newBoard) ->
+  for row in [0..3]
+    for col in [0..3]
+      if originalBoard[row][col] isnt newBoard[row][col]
+        return true #use return to stop the function becasue it is a valid move and there is no need to check further
+
+  false #if after running the 16 cells and the above is not met, then the loop will finish and return false
+
+boardIsFull = (board) ->
+  for row in board
+    if 0 in row
+      return false
+  true
+
+noValidMoves = (board) ->
+  direction = 'right' #FIXME: handle other direction
+  newBoard = move(board, direction)
+  if moveIsValid(board, newBoard)
+    return false
+  false
+
+isGameOver = (board) ->
+  boardIsFull(board) and noValidMoves(board)
 
 showBoard = (board) ->
   for row in [0..3]
@@ -81,11 +132,9 @@ printArray = (array) ->
   console.log "-- End --"
 
 $ ->
-  #newBoard = buildBoard()
   @board = buildBoard()
   generateTile(@board)
   generateTile(@board)
-  #printArray(newBoard)
   showBoard(@board)
 
   $('body').keydown (e) =>
@@ -102,11 +151,22 @@ $ ->
         when 38 then 'up'
         when 39 then 'right'
         when 40 then 'down'
-      # console.log "direction: ", direction
 
       #try moving
-      move(@board, direction)
-      #check move validity
-
+      newBoard = move(@board, direction)
+      printArray newBoard
+      #check move validity by compring original and new board
+      if moveIsValid(@board, newBoard) #comparing original board to new board
+        console.log "valid"
+        @board = newBoard
+        #generate tile
+        generateTile(@board)
+        # show Board
+        showBoard(@board)
+        #check game lost
+        if isGameOver(@board)
+          console.log "YOU LOSE"
+      else
+        console.log "invalid"
     else
       #do nothing
