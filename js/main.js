@@ -29,7 +29,6 @@
     var column, row, value, _ref;
     value = randomValue();
     _ref = randomCellIndices(), row = _ref[0], column = _ref[1];
-    console.log("row: " + row + " / col: " + column);
     if (board[row][column] === 0) {
       board[row][column] = value;
     } else {
@@ -39,18 +38,10 @@
   };
 
   move = function(board, direction) {
-    var i, newBoard, row, _i, _j;
+    var i, newBoard, row, _i;
     newBoard = buildBoard();
     for (i = _i = 0; _i <= 3; i = ++_i) {
-      if (direction === 'right') {
-        row = getRow(i, board);
-        row = mergeCells(row, direction);
-        row = collapseCells(row, direction);
-        setRow(row, i, newBoard);
-      }
-    }
-    for (i = _j = 0; _j <= 3; i = ++_j) {
-      if (direction === 'left') {
+      if (direction === 'right' || 'left') {
         row = getRow(i, board);
         row = mergeCells(row, direction);
         row = collapseCells(row, direction);
@@ -69,8 +60,9 @@
   };
 
   mergeCells = function(row, direction) {
-    var a, b, _i, _j, _k, _l, _ref, _ref1;
-    if (direction === 'right') {
+    var merge;
+    merge = function(row) {
+      var a, b, _i, _j, _ref;
       for (a = _i = 3; _i > 0; a = --_i) {
         for (b = _j = _ref = a - 1; _ref <= 0 ? _j <= 0 : _j >= 0; b = _ref <= 0 ? ++_j : --_j) {
           if (row[a] === 0) {
@@ -84,39 +76,25 @@
           }
         }
       }
-    }
-    if (direction === 'left') {
-      for (a = _k = 0; _k < 3; a = ++_k) {
-        for (b = _l = 0, _ref1 = a - 1; 0 <= _ref1 ? _l <= _ref1 : _l >= _ref1; b = 0 <= _ref1 ? ++_l : --_l) {
-          if (row[a] === 0) {
-            break;
-          } else if (row[a] === row[b]) {
-            row[a] *= 2;
-            row[b] = 0;
-            break;
-          } else if (row[b] !== 0) {
-            break;
-          }
-        }
-      }
+      return row;
+    };
+    if (direction === 'right') {
+      merge(row);
+    } else if (direction === 'left') {
+      row = merge(row.reverse()).reverse();
     }
     return row;
   };
-
-  console.log(mergeCells([4, 0, 0, 4], 'right'));
 
   collapseCells = function(row, direction) {
     row = row.filter(function(x) {
       return x !== 0;
     });
-    if (direction === 'right') {
-      while (row.length < 4) {
+    while (row.length < 4) {
+      if (direction === 'right') {
         row.unshift(0);
-      }
-    }
-    if (direction === 'left') {
-      while (row.length < 4) {
-        row.unshift(0);
+      } else if (direction === 'left') {
+        row.push(0);
       }
     }
     return row;
@@ -169,7 +147,11 @@
         var _j, _results1;
         _results1 = [];
         for (col = _j = 0; _j <= 3; col = ++_j) {
-          _results1.push($(".r" + row + ".c" + col + " > div").html(board[row][col]));
+          if (board[row][col] === 0) {
+            _results1.push($(".r" + row + ".c" + col + " > div").html(''));
+          } else {
+            _results1.push($(".r" + row + ".c" + col + " > div").html(board[row][col]));
+          }
         }
         return _results1;
       })());
@@ -221,12 +203,12 @@
             showBoard(_this.board);
             if (isGameOver(_this.board)) {
               return console.log("YOU LOSE");
+            } else {
+              return showBoard(_this.board);
             }
           } else {
             return console.log("invalid");
           }
-        } else {
-
         }
       };
     })(this));

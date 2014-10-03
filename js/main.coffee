@@ -20,7 +20,7 @@ buildBoard = ->
 generateTile = (board) ->
   value = randomValue()
   [row, column] = randomCellIndices()  #assign the two random numbers to row and colum respectively as a coordinate
-  console.log "row: #{row} / col: #{column}"
+  # console.log "row: #{row} / col: #{column}"
 
   if board[row][column] is 0
     board[row][column] = value  #assign a value to the random coordinate where value = 2
@@ -33,14 +33,7 @@ move = (board, direction) ->  #this function includes multiple functions as belo
   newBoard = buildBoard()
 
   for i in [0..3]
-    if direction is 'right'
-      row = getRow(i,board)
-      row = mergeCells(row, direction)
-      row = collapseCells(row, direction)
-      setRow(row, i, newBoard)
-
-  for i in [0..3]
-    if direction is 'left'
+    if direction is 'right' or 'left'
       row = getRow(i,board)
       row = mergeCells(row, direction)
       row = collapseCells(row, direction)
@@ -55,7 +48,8 @@ setRow = (row, index, board) ->
   board[index] = row
 
 mergeCells = (row, direction) ->
-  if direction is 'right'
+
+  merge = (row) -> #this row is inside this merge function, different scope to row in mergeCells function
     for a in [3...0]
       for b in [a-1..0]
         if row[a] is 0 then break
@@ -64,29 +58,25 @@ mergeCells = (row, direction) ->
           row[b] = 0
           break
         else if row[b] isnt 0 then break
-  if direction is 'left'
-    for a in [0...3]
-      for b in [0..a-1]
-        if row[a] is 0 then break
-        else if row[a] == row[b]
-          row[a] *= 2 # same as row[a] = row[a] * 2
-          row[b] = 0
-          break
-        else if row[b] isnt 0 then break
-  row
+    row
 
-console.log  mergeCells [4, 0, 0, 4], 'right'
+  if direction is 'right'
+    merge row
+  else if direction is 'left'
+    row = merge(row.reverse()).reverse()
+
+  row
 
 collapseCells = (row, direction) ->
   # remove '0'
   row = row.filter (x) -> x isnt 0
   # adding '0'
-  if direction is 'right'
-    while row.length < 4
+  while row.length < 4
+    if direction is 'right'
+
       row.unshift 0
-  if direction is 'left'
-    while row.length < 4
-      row.unshift 0
+    else if direction is 'left'
+     row.push 0
 
   row
 console.log collapseCells [2, 0, 0, 2], 'right'
@@ -119,7 +109,10 @@ isGameOver = (board) ->
 showBoard = (board) ->
   for row in [0..3]
     for col in [0..3]
-      $(".r#{row}.c#{col} > div").html(board[row][col])
+      if board[row][col] is 0
+        $(".r#{row}.c#{col} > div").html('')
+      else
+        $(".r#{row}.c#{col} > div").html(board[row][col])
 
   # console.log "show board"
   # console.log row + col
@@ -166,7 +159,8 @@ $ ->
         #check game lost
         if isGameOver(@board)
           console.log "YOU LOSE"
+        else
+          showBoard(@board)
       else
         console.log "invalid"
-    else
       #do nothing
