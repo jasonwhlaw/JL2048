@@ -13,8 +13,14 @@ body {
 
 h1 {
     font-size: 55px;
-    padding: 20px;
+    padding: 5px;
 
+}
+
+p1 {
+  font-size: 25px;
+  padding: 10px;
+  margin: 3px;
 }
 
 .board {
@@ -29,7 +35,7 @@ h1 {
 .cell {
   font: arial;
   font-style: bold;
-  font-size: 60px;
+  font-size: 50px;
   background: rgba(63, 79, 95, 1);
   border: 3px solid gray;
   border-radius: 7px;
@@ -41,7 +47,7 @@ h1 {
 }
 
 .cell div {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 

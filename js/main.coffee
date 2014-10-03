@@ -167,7 +167,7 @@ $ ->
         showBoard(@board)
         #check game lost
         if isGameOver(@board)
-          alert "YOU LOSE"
+          alert "I STILL LOVE YOU EVEN YOU LOSE"
         else
           showBoard(@board)
       else

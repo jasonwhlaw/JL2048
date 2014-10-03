@@ -221,7 +221,7 @@
             generateTile(_this.board);
             showBoard(_this.board);
             if (isGameOver(_this.board)) {
-              return alert("YOU LOSE");
+              return alert("I STILL LOVE YOU EVEN YOU LOSE");
             } else {
               return showBoard(_this.board);
             }
