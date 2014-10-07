@@ -159,7 +159,7 @@
   };
 
   showBoard = function(board) {
-    var col, row, _i, _results;
+    var col, power, row, _i, _results;
     _results = [];
     for (row = _i = 0; _i <= 3; row = ++_i) {
       _results.push((function() {
@@ -167,9 +167,18 @@
         _results1 = [];
         for (col = _j = 0; _j <= 3; col = ++_j) {
           if (board[row][col] === 0) {
-            _results1.push($(".r" + row + ".c" + col + " > div").html(''));
+            $(".r" + row + ".c" + col + " > div").html('');
+            _results1.push((function() {
+              var _k, _results2;
+              _results2 = [];
+              for (power = _k = 1; _k <= 11; power = ++_k) {
+                _results2.push($(".r" + row + ".c" + col + " > div").removeClass('val-' + Math.pow(2, power)));
+              }
+              return _results2;
+            })());
           } else {
-            _results1.push($(".r" + row + ".c" + col + " > div").html(board[row][col]));
+            $(".r" + row + ".c" + col + " > div").html(board[row][col]);
+            _results1.push($(".r" + row + ".c" + col + " > div").addClass('val-' + board[row][col]));
           }
         }
         return _results1;
@@ -189,13 +198,30 @@
   };
 
   $(function() {
+    $('.board').hide();
+    $('.board').fadeIn(5000);
     this.board = buildBoard();
     generateTile(this.board);
     generateTile(this.board);
     showBoard(this.board);
+    $('.reset').click((function(_this) {
+      return function() {
+        $('.board').hide();
+        $('.board').fadeIn(1000);
+        _this.board = buildBoard();
+        generateTile(_this.board);
+        generateTile(_this.board);
+        return showBoard(_this.board);
+      };
+    })(this));
+    $('.original').click((function(_this) {
+      return function() {
+        return document.location = 'http://gabrielecirulli.github.io/2048/';
+      };
+    })(this));
     return $('body').keydown((function(_this) {
       return function(e) {
-        var direction, key, keys, newBoard;
+        var direction, gameOverMsg, key, keys, newBoard;
         key = e.which;
         keys = [37, 38, 39, 40];
         if (__indexOf.call(keys, key) >= 0) {
@@ -221,7 +247,17 @@
             generateTile(_this.board);
             showBoard(_this.board);
             if (isGameOver(_this.board)) {
-              return alert("I STILL LOVE YOU EVEN YOU LOSE");
+              gameOverMsg = confirm("TRY AGAIN?");
+              if (gameOverMsg === true) {
+                $('.board').hide();
+                $('.board').fadeIn(1000);
+                _this.board = buildBoard();
+                generateTile(_this.board);
+                generateTile(_this.board);
+                return showBoard(_this.board);
+              } else {
+                return document.location = 'http://www.reactiongifs.com/r/usk.gif';
+              }
             } else {
               return showBoard(_this.board);
             }

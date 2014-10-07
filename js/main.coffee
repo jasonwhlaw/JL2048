@@ -120,9 +120,11 @@ showBoard = (board) ->
     for col in [0..3]
       if board[row][col] is 0
         $(".r#{row}.c#{col} > div").html('')
+        for power in [1..11]
+          $(".r#{row}.c#{col} > div").removeClass('val-' + Math.pow(2, power))
       else
         $(".r#{row}.c#{col} > div").html(board[row][col])
-
+        $(".r#{row}.c#{col} > div").addClass('val-' + board[row][col])
   # console.log "show board"
   # console.log row + col
 
@@ -134,10 +136,22 @@ printArray = (array) ->
   console.log "-- End --"
 
 $ ->
+  $('.board').hide()
+  $('.board').fadeIn(5000)
   @board = buildBoard()
   generateTile(@board)
   generateTile(@board)
   showBoard(@board)
+
+  $('.reset').click =>
+    $('.board').hide()
+    $('.board').fadeIn(1000)
+    @board = buildBoard()
+    generateTile(@board)
+    generateTile(@board)
+    showBoard(@board)
+  $('.original').click =>
+    document.location = 'http://gabrielecirulli.github.io/2048/'
 
   $('body').keydown (e) =>
 
@@ -163,11 +177,22 @@ $ ->
         @board = newBoard
         #generate tile
         generateTile(@board)
+
         # show Board
         showBoard(@board)
         #check game lost
         if isGameOver(@board)
-          alert "I STILL LOVE YOU EVEN YOU LOSE"
+          gameOverMsg = confirm("TRY AGAIN?")
+          if gameOverMsg is true
+            $('.board').hide()
+            $('.board').fadeIn(1000)
+            @board = buildBoard()
+            generateTile(@board)
+            generateTile(@board)
+            showBoard(@board)
+
+          else
+            document.location = 'http://www.reactiongifs.com/r/usk.gif'
         else
           showBoard(@board)
       else
