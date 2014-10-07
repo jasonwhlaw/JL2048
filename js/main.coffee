@@ -112,6 +112,14 @@ noValidMoves = (board) ->
       return false
   true
 
+
+calculateScore = (array) ->  ####
+  score = 0
+  for row in array
+    for elem in row
+      score += elem
+  score
+
 isGameOver = (board) ->
   boardIsFull(board) and noValidMoves(board)
 
@@ -136,14 +144,22 @@ printArray = (array) ->
   console.log "-- End --"
 
 $ ->
+  $('#gameOverScreen').hide()
   $('.board').hide()
   $('.board').fadeIn(5000)
+
   @board = buildBoard()
   generateTile(@board)
   generateTile(@board)
   showBoard(@board)
 
+
+
+
+
+
   $('.reset').click =>
+    $('#gameOverScreen').hide()
     $('.board').hide()
     $('.board').fadeIn(1000)
     @board = buildBoard()
@@ -182,17 +198,19 @@ $ ->
         showBoard(@board)
         #check game lost
         if isGameOver(@board)
-          gameOverMsg = confirm("TRY AGAIN?")
-          if gameOverMsg is true
-            $('.board').hide()
-            $('.board').fadeIn(1000)
-            @board = buildBoard()
-            generateTile(@board)
-            generateTile(@board)
-            showBoard(@board)
+          $(".board").fadeOut(2000)
+          $("#gameOverScreen").delay(2000).fadeIn(1000)
 
-          else
-            document.location = 'http://www.reactiongifs.com/r/usk.gif'
+          # gameOverMsg = confirm("TRY AGAIN?")
+          # if gameOverMsg is true
+          #   $('.board').hide()
+          #   $('.board').fadeIn(1000)
+          #   @board = buildBoard()
+          #   generateTile(@board)
+          #   generateTile(@board)
+          #   showBoard(@board)
+
+
         else
           showBoard(@board)
       else
