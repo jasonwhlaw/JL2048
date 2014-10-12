@@ -1,3 +1,5 @@
+@score = 0
+
 randomInteger = (x) ->
   Math.floor(Math.random() * x)
 
@@ -69,6 +71,7 @@ mergeCells = (cells, direction) ->
         else if cells[a] == cells[b]
           cells[a] *= 2 # same as cells[a] = cells[a] * 2
           cells[b] = 0
+          updateScore(@score += cells[a])#line
           break
         else if cells[b] isnt 0 then break
     cells
@@ -113,12 +116,12 @@ noValidMoves = (board) ->
   true
 
 
-calculateScore = (array) ->  ####
-  score = 0
-  for row in array
-    for elem in row
-      score += elem
-  score
+##calculateScore = (array) ->  ####
+##  score = 0
+  # for row in array
+    # for elem in row
+      # score += elem
+  # score
 
 isGameOver = (board) ->
   boardIsFull(board) and noValidMoves(board)
@@ -143,6 +146,13 @@ printArray = (array) ->
     console.log row
   console.log "-- End --"
 
+resetToZero = -> #
+  0
+
+updateScore = -> #
+  $('h3.score').html(@score)
+
+
 $ ->
   $('#gameOverScreen').hide()
   $('.board').hide()
@@ -166,6 +176,7 @@ $ ->
     generateTile(@board)
     generateTile(@board)
     showBoard(@board)
+    @score = resetToZero()
   $('.original').click =>
     document.location = 'http://gabrielecirulli.github.io/2048/'
 
